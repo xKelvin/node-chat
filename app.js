@@ -5,12 +5,37 @@ let cookieParser = require('cookie-parser');
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost:27017/node-chat', { useNewUrlParser: true });
 
-let app = express();
+// Models
+require('./models/room');
+require('./models/user');
+require('./models/line');
 
-//To parse URL encoded data
-app.use(bodyParser.urlencoded({ extended: false }));
-//To parse json data
+function handleError(req, res, statusCode, message){
+    console.log();
+    console.log('-------- Error handled --------');
+    console.log('Request Params: ' + JSON.stringify(req.params));
+    console.log('Request Body: ' + JSON.stringify(req.body));
+    console.log('Response sent: Statuscode ' + statusCode + ', Message "' + message + '"');
+    console.log('-------- /Error handled --------');
+    res.status(statusCode);
+    res.json(message);
+};
+
+var app = express();
+
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+
+app.use('/rooms', require('./routes/rooms')(handleError));
+//app.use('/users', require('./routes/users'));
+//app.use('/lines', require('./routes/lines'));
+
+// catch 404 and forward to error handler
+app.use(function(req, res, next) {
+    var err = new Error('Not Found');
+    err.status = 404;
+    next(err);
+});
 
 app.listen(3000);
