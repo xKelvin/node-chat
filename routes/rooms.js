@@ -8,8 +8,13 @@ User = mongoose.model('User');
 let handleError;
 
 function getAllRooms(req, res) {
-    Room.find({})
-        .then(rooms => {
+    var query = Room.find({});
+
+        if(req.query.orderBy){
+            query.sort('field ' + req.query.orderBy)
+        }
+
+        query.then(rooms => {
             res.status(200)
                 .json(rooms);
         })
@@ -126,7 +131,7 @@ function getRoomUsersLines(req, res) {
             let lines = room.lines.filter(line => line.user_id == req.params.userId);
 
             res.status(200).
-            json(lines);
+                json(lines);
         }).catch(err => handleError(req, res, 500, err));
 }
 

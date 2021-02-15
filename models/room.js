@@ -11,4 +11,10 @@ let roomSchema = new mongoose.Schema({
     users: [{ type: String, ref: 'User' }]
 });
 
+roomSchema.query.byPage = function (pageIndex, pageSize) {
+    pageIndex = pageIndex || 0;
+    pageSize = pageSize || 10;
+    return this.find().skip(pageIndex * pageSize).limit(pageSize);
+};
+
 mongoose.model('Room', roomSchema);
