@@ -85,8 +85,14 @@ function deleteRoom(req, res) {
 function getRoomLines(req, res) {
     Room.findById(req.params.id)
         .then(room => {
+            let lines = room.lines;
+
+            if(req.query.page && req.query.pageSize){
+                lines = lines.slice((req.query.page - 1) * req.query.pageSize, req.query.page * req.query.pageSize);
+            }
+
             res.status(200)
-                .json(room.lines);
+                .json(lines);
         })
         .catch(err => handleError(req, res, 500, err));
 }
