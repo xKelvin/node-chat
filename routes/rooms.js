@@ -1,8 +1,10 @@
+const { json } = require('body-parser');
 let express = require('express');
 let router = express();
 
 let mongoose = require('mongoose');
 Room = mongoose.model('Room');
+User = mongoose.model('User');
 let handleError;
 
 function getAllRooms(req, res) {
@@ -87,15 +89,15 @@ function getRoomLines(req, res) {
 function addRoomLine(req, res) {
     Room.findById(req.params.id)
         .then(room => {
+
             let line = {
                 text: req.body.text,
                 user_id: req.body.user_id,
             };
+
+            room.users.push(req.body.user_id);
             room.lines.push(line);
-            Room.findOneAndUpdate(
-                { _id: req.params.id },
-                { lines: room.lines },
-                { runValidators: true },
+            room.save(
                 (err) => {
                     if (err) return handleError(req, res, 500, err);
 
@@ -106,6 +108,26 @@ function addRoomLine(req, res) {
                 });
         })
         .catch(err => handleError(req, res, 500, err));
+}
+
+function getRoomUsers(req, res) {
+    Room.findById(req.params.id)
+        .populate('users')
+        .then(room => {
+            res.status(200)
+                .json(room.users);
+        })
+        .catch(err => handleError(req, res, 500, err));
+}
+
+function getRoomUsersLines(req, res) {
+    Room.findById(req.params.id)
+        .then(room => {
+            let lines = room.lines.filter(line => line.user_id == req.params.userId);
+
+            res.status(200).
+            json(lines);
+        }).catch(err => handleError(req, res, 500, err));
 }
 
 // Routes
@@ -120,6 +142,12 @@ router.route('/:id/lines')
 
 router.route('/:id/lines')
     .post(addRoomLine);
+
+router.route('/:id/users')
+    .get(getRoomUsers);
+
+router.route('/:id/users/:userId/lines')
+    .get(getRoomUsersLines);
 
 router.route('/')
     .post(addRoom);

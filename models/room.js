@@ -8,7 +8,7 @@ let roomSchema = new mongoose.Schema({
         text: { type: String, required: true },
         user_id: {type: String, required: true},
     }],
-    users: [{ type: String, red: 'User' }]
+    users: [{ type: String, ref: 'User' }]
 });
 
 mongoose.model('Room', roomSchema);
