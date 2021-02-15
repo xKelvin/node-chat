@@ -8,9 +8,9 @@ mongoose.connect('mongodb://localhost:27017/node-chat', { useNewUrlParser: true 
 let app = express();
 
 //To parse URL encoded data
-app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.urlencoded({ extended: false }));
 //To parse json data
-app.use(bodyParser.json())
-app.use(cookieParser())
+app.use(bodyParser.json());
+app.use(cookieParser());
 
 app.listen(3000);
