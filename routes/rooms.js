@@ -125,8 +125,17 @@ function getRoomUsers(req, res) {
     Room.findById(req.params.id)
         .populate('users')
         .then(room => {
+            let users = room.users;
+
+            if(req.query.name){
+                users = room.users.
+                        filter(user => user.username
+                                        .toLowerCase()
+                                        .includes(req.query.name.toLowerCase()));
+            }
+
             res.status(200)
-                .json(room.users);
+                .json(users);
         })
         .catch(err => handleError(req, res, 500, err));
 }
