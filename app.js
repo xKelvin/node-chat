@@ -8,7 +8,6 @@ mongoose.connect('mongodb://localhost:27017/node-chat', { useNewUrlParser: true 
 // Models
 require('./models/room');
 require('./models/user');
-require('./models/line');
 
 function handleError(req, res, statusCode, message){
     console.log();
@@ -29,7 +28,6 @@ app.use(cookieParser());
 
 app.use('/rooms', require('./routes/rooms')(handleError));
 app.use('/users', require('./routes/users')(handleError));
-//app.use('/lines', require('./routes/lines')(handleError));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

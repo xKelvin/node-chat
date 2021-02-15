@@ -2,7 +2,6 @@ let express = require('express');
 let router = express();
 
 let mongoose = require('mongoose');
-Line = mongoose.model('Line');
 User = mongoose.model('User');
 let handleError;
 

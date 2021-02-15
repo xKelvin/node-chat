@@ -2,7 +2,10 @@ let mongoose = require('mongoose');
 
 let roomSchema = new mongoose.Schema({
     name: { type: String, required: true, unique: true },
-    lines: [{ type: String, ref: 'Line' }],
+    lines: [{
+        timestamp: { type: Date, required: true, default: Date.now() },
+        text: { type: String, required: true }
+    }],
     users: [{ type: String, red: 'User' }]
 });
 
