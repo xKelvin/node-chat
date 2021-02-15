@@ -28,8 +28,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 app.use('/rooms', require('./routes/rooms')(handleError));
-//app.use('/users', require('./routes/users'));
-//app.use('/lines', require('./routes/lines'));
+app.use('/users', require('./routes/users')(handleError));
+//app.use('/lines', require('./routes/lines')(handleError));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

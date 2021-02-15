@@ -3,8 +3,6 @@ let router = express();
 
 let mongoose = require('mongoose');
 Room = mongoose.model('Room');
-Line = mongoose.model('Line');
-User = mongoose.model('User');
 let handleError;
 
 function getAllRooms(req, res) {
