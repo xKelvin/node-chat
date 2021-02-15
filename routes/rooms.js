@@ -75,12 +75,51 @@ function deleteRoom(req, res) {
     }
 }
 
+function getRoomLines(req, res) {
+    Room.findById(req.params.id)
+        .then(room => {
+            res.status(200)
+                .json(room.lines);
+        })
+        .catch(err => handleError(req, res, 500, err));
+}
+
+function addRoomLine(req, res) {
+    Room.findById(req.params.id)
+        .then(room => {
+            let line = {
+                text: req.body.text,
+                user_id: req.body.user_id,
+            };
+            room.lines.push(line);
+            Room.findOneAndUpdate(
+                { _id: req.params.id },
+                { lines: room.lines },
+                { runValidators: true },
+                (err) => {
+                    if (err) return handleError(req, res, 500, err);
+
+                    res.status(200)
+                        .json({
+                            message: "Line succesfully send to room."
+                        });
+                });
+        })
+        .catch(err => handleError(req, res, 500, err));
+}
+
 // Routes
 router.route('/')
     .get(getAllRooms);
 
 router.route('/:id')
     .get(getRoomById);
+
+router.route('/:id/lines')
+    .get(getRoomLines);
+
+router.route('/:id/lines')
+    .post(addRoomLine);
 
 router.route('/')
     .post(addRoom);
